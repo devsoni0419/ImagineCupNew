@@ -1,23 +1,19 @@
-import json
-import joblib
+import os
 import numpy as np
+from joblib import load
+from features.speechFeatures import extract_audio_features
+from features.handwritingFeatures import extract_handwriting_features
 
-def init():
-    global model
-    model = joblib.load("model/late_fusion.pkl")
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+MODEL_PATH = os.path.join(BASE_DIR, "models", "multimodal_pd_model.joblib")
 
-def run(raw_data):
-    data = json.loads(raw_data)
+model = load(MODEL_PATH)
 
-    speech = data["speech"]
-    handwriting = data["handwriting"]
-    gait = data["gait"]
+def predict_with_features(audio_path, image_path):
+    audio_feat = extract_audio_features(audio_path)
+    img_feat = extract_handwriting_features(image_path)
 
-    X = np.array(speech + handwriting + gait).reshape(1, -1)
-    risk = model.predict_proba(X)[0][1]
+    X = np.hstack([audio_feat, img_feat]).reshape(1, -1)
 
-    return {
-        "risk_score": float(risk),
-        "confidence": float(max(risk, 1 - risk)),
-        "disclaimer": "This is NOT a medical diagnosis. For screening only."
-    }
+    prob = model.predict_proba(X)[0][1]
+    return prob, X

@@ -1,10 +1,13 @@
 import shap
-import joblib
-import numpy as np
+import os
+from joblib import load
 
-def explain_model(model_path, X_sample):
-    model = joblib.load(model_path)
-    explainer = shap.Explainer(model, X_sample)
-    shap_values = explainer(X_sample)
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+MODEL_PATH = os.path.join(BASE_DIR, "models", "multimodal_pd_model.joblib")
 
-    return shap_values.values.tolist()
+model = load(MODEL_PATH)
+explainer = shap.TreeExplainer(model)
+
+def explain_prediction(X):
+    shap_values = explainer.shap_values(X)
+    return shap_values
