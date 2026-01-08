@@ -163,10 +163,16 @@ if audio_mode == "Upload Audio":
         st.session_state.audio_path = "temp_audio.wav"
         st.session_state._audio_just_saved = True
 else:
-    audio_segment = audiorecorder("🎤 Start Recording", "⏹️ Stop Recording")
-    if audio_segment and st.session_state.audio_path is None:
-        audio_segment = audio_segment.set_channels(1).set_frame_rate(16000)
-        audio_segment.export("temp_audio.wav", format="wav")
+    audio_file = st.file_uploader(
+        "🎤 Upload Speech Sample (.wav)",
+        type=["wav"],
+        key="audio_uploader"
+    )
+
+    if audio_file and st.session_state.audio_path is None:
+        with open("temp_audio.wav", "wb") as f:
+            f.write(audio_file.read())
+
         st.session_state.audio_path = "temp_audio.wav"
         st.session_state._audio_just_saved = True
 
