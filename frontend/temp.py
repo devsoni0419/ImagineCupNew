@@ -1,10 +1,9 @@
 import streamlit as st
 import requests
 from PIL import Image
-from audiorecorder import audiorecorder
 from streamlit_drawable_canvas import st_canvas
 
-API_BASE = "https://parkinson-api-c8cxg6b9dwcdhzgx.centralindia-01.azurewebsites.net/docs"
+API_BASE = "https://parkinson-api-c8cxg6b9dwcdhzgx.centralindia-01.azurewebsites.net"
 
 # ====================== SESSION STATE ======================
 if "audio_path" not in st.session_state:
@@ -163,10 +162,10 @@ if audio_mode == "Upload Audio":
         st.session_state.audio_path = "temp_audio.wav"
         st.session_state._audio_just_saved = True
 else:
-    audio_segment = audiorecorder("🎤 Start Recording", "⏹️ Stop Recording")
-    if audio_segment and st.session_state.audio_path is None:
-        audio_segment = audio_segment.set_channels(1).set_frame_rate(16000)
-        audio_segment.export("temp_audio.wav", format="wav")
+    audio_data = st.audio_input("🎤 Start Recording")
+    if audio_data is not None and st.session_state.audio_path is None:
+        with open("temp_audio.wav", "wb") as f:
+            f.write(audio_data.getbuffer())
         st.session_state.audio_path = "temp_audio.wav"
         st.session_state._audio_just_saved = True
 
