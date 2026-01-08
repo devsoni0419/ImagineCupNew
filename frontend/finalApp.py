@@ -4,7 +4,7 @@ from PIL import Image
 from audiorecorder import audiorecorder
 from streamlit_drawable_canvas import st_canvas
 
-API_BASE = "https://parkinson-api-c8cxg6b9dwcdhzgx.centralindia-01.azurewebsites.net/docs"
+API_BASE = "https://parkinson-api-c8cxg6b9dwcdhzgx.centralindia-01.azurewebsites.net"
 
 # ====================== SESSION STATE ======================
 if "audio_path" not in st.session_state:
