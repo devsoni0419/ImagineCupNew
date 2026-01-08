@@ -17,3 +17,7 @@ matplotlib==3.8.2
 shap==0.44.1
 
 tqdm==4.66.1
+
+streamlit-audiorecorder==0.0.6
+streamlit-drawable-canvas==0.9.3
+pydub==0.25.1
